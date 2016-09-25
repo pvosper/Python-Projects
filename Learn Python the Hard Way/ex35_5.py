@@ -45,7 +45,6 @@ def bear_room():
             gold_room()
         else:
             print "I have no idea what that means"
-                # no exit
 
 def cthulu_room():
     print "Here you are with the great evil Cthulu."
