@@ -1,9 +1,9 @@
 ## Synopsis
 
 Educational and personal Python projects
-Python Essential Reference by David M. Beazley
+Python the Hard Way
 
-Python 3.3.3
+Python 2.7.10
 
 ## Contributors
 
