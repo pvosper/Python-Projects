@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="78a37333-0f64-45ad-929d-83d398d428e1" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ex38.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/readme.md" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Python Essential Reference/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../Python Essential Reference/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Python Essential Reference/readme.md" afterPath="$PROJECT_DIR$/../Python Essential Reference/readme.md" />
     </list>
     <ignored path="Learn Python the Hard Way.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -614,7 +610,14 @@
       <option name="project" value="LOCAL" />
       <updated>1474842515018</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Weekend's work">
+      <created>1475463058886</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1475463058887</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TodoView">
@@ -686,7 +689,8 @@
     <MESSAGE value="Work/practice (this is starting to get interesting/fun)" />
     <MESSAGE value="Work/practice (check in from a public plaza at sunset)" />
     <MESSAGE value="Finished coding at 38,000 feet over Oregon - Yay!" />
-    <option name="LAST_COMMIT_MESSAGE" value="Finished coding at 38,000 feet over Oregon - Yay!" />
+    <MESSAGE value="Weekend's work" />
+    <option name="LAST_COMMIT_MESSAGE" value="Weekend's work" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
