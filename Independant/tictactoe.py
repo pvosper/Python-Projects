@@ -2,6 +2,11 @@
 
 """
 Simple interactive Tic Tac Toe
+
+a1 a2 a3
+b1 b2 b3
+c1 c2 c3
+
 """
 
 # board should be dict
@@ -10,12 +15,29 @@ ttt = list(range(9))
 
 # dict start with end with
 
-def test(board):
-    print('{}|{}|{}'.format(ttt[0], ttt[1], ttt[2]))
+def create_board():
+    # Returns empty board as dict
+    board = {}
+    for letter in ['a', 'b', 'c']:
+        for i in range(1,4):
+            board[letter + str(i)] = ' '
+    return board
+
+def label_board(board):
+    # Over-writes existing board with cell labels
+    for entry in board:
+        board[entry] = entry
+
+
+active_board = {'a1': 'X', 'a2': 'O', 'a3': 'P'}
+
+
+def test(**kwargs):
+    print('{a1}|{a2}|{a3}'.format(**kwargs))
     print('-' * 5)
-    print('{}|{}|{}'.format(ttt[3], ttt[4], ttt[5]))
-    print('-' * 5)
-    print('{}|{}|{}\n'.format(ttt[6], ttt[7], ttt[8]))
+
+test(**active_board)
+
 
 def print_board():
     print('{}|{}|{}'.format(ttt[0], ttt[1], ttt[2]))
@@ -23,6 +45,7 @@ def print_board():
     print('{}|{}|{}'.format(ttt[3], ttt[4], ttt[5]))
     print('-' * 5)
     print('{}|{}|{}\n'.format(ttt[6], ttt[7], ttt[8]))
+
 
 def clear_board(board):
     for i in range(len(board)):

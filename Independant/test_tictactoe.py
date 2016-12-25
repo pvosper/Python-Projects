@@ -4,15 +4,27 @@
 Testing for Simple interactive Tic Tac Toe
 """
 
-import random
 
-from tictactoe import clear_board
+from tictactoe import create_board, label_board
 
 
-def test_clear_board():
+def test_create_board():
 
-    t = list(range(9))
+    c = create_board()
 
-    clear_board(t)
+    assert len(c) == 9
+    assert c['a1'] == ' '
+    assert c['b2'] == ' '
+    assert c['c3'] == ' '
 
-    assert t[random.randint(0, 8)] == ' '
+
+def test_label_board():
+
+    c = create_board()
+
+    label_board(c)
+
+    assert len(c) == 9
+    assert c['a1'] == 'a1'
+    assert c['b2'] == 'b2'
+    assert c['c3'] == 'c3'
