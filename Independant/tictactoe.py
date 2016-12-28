@@ -35,12 +35,14 @@ def print_board(**kwargs):
 
 
 def create_scorekeeper():
+    # Scorekeeper is used to score active board
     # Returns empty scorekeeper dictionary
     # For each of the eight winning row/column/diagonals:
     #     <count of X>, <count of O>, [<list of blank cells>]
     scorekeeper = {}
     for entry in ['a', 'b', 'c', '1', '2', '3', 'd1', 'd2']:
         scorekeeper[entry] = [0, 0, []]
+
     return scorekeeper
 
 
@@ -90,7 +92,37 @@ def update_scorekeeper(scorekeeper, board):
             scorekeeper['d2'][1] += 1
         else:
             scorekeeper['d2'][2].append(key)
-    print(scorekeeper)
+    # print(scorekeeper)
+
+
+def create_gamekeeper():
+    # Gamekeeper is used to score games/series
+    # Returns empty gamekeeper dictionary
+    # Win/loss, Player, Draw
+    # play, win, draw
+
+    gamekeeper = {'current_state': 'play', 'human_score': 0, 'machine_score': 0, 'available_moves': 0}
+    return gamekeeper
+
+
+def update_gamekeeper(active_gamekeeper, scorekeeper):
+    # Updates current gamekeeper object with game state
+
+    active_gamekeeper['available_moves'] = 0
+    active_gamekeeper['current_state'] = 'draw'
+
+    for key in scorekeeper:
+        if scorekeeper[key][0] == 3:
+            active_gamekeeper['current_state'] = 'win'
+            active_gamekeeper['human_score'] += 1
+
+        if scorekeeper[key][1] == 3:
+            active_gamekeeper['current_state'] = 'win'
+            active_gamekeeper['machine_score'] += 1
+
+        if len(scorekeeper[key][2]) > 0:
+            active_gamekeeper['available_moves'] += len(scorekeeper[key][2])
+            active_gamekeeper['current_state'] = 'play'
 
 
 def print_info():
@@ -119,7 +151,7 @@ def human_turn(active_board, example_board):
         if len(response) is 2 and response[0] in ['a', 'b', 'c'] and response[1] in ['1', '2', '3']:
             if active_board[response] == ' ':
                 active_board[response] = "X"
-                print_board(**active_board)
+                # print_board(**active_board)
                 return
             else:
                 print('That cell is already taken')
@@ -138,47 +170,28 @@ def human_turn(active_board, example_board):
             print("try again")
 
 
-def machine_turn(active_board):
+def machine_turn(active_board, scorekeeper):
+
+    move_list = []
+
+    for key in scorekeeper:
+        if scorekeeper[key][0] == 2 and len(scorekeeper[key][2]) > 0:
+            move_list.append(scorekeeper[key][2][0])
 
     best_move_list = ['b2', 'a1', 'a3', 'c1', 'c3', 'b1', 'b3', 'a2', 'c2']
 
-    for entry in best_move_list:
+    move_list += best_move_list
+
+    # print('move_list: ', move_list)
+
+    for entry in move_list:
         if active_board[entry] == ' ':
             active_board[entry] = 'O'
             print_board(**active_board)
             return
 
 
-def check_board(board, win_condition):
-    # Returns list for win or threat conditions
-
-    # Threat List will contain names of cells that should be blocked to prevent win
-    threat_list = []
-
-    # Row/col/dia score in form <count of X>, <count of O>, [<list of blank cells>]
-    score_a = [0, 0, []]
-    for entry in range(1, 4):
-        if board['a' + str(entry)] == 'X':
-            score_a[0] += 1
-        elif board['a' + str(entry)] == 'O':
-            score_a[1] += 1
-        elif board['a' + str(entry)] == ' ':
-            score_a[2].append('a' + str(entry))
-    print(score_a)
-
-    if score_a[0] == 3:
-        win_condition = True
-    elif score_a[0] == 2 and score_a[1] == 0:
-        threat_list.append(score_a[2][0])
-
-    print([win_condition, threat_list])
-
-    return [win_condition, [threat_list]]
-
-
 def main():
-
-    win_condition = False
 
     # First, print board with labels in cells to identify them.
     example_board = create_board()
@@ -191,19 +204,27 @@ def main():
     # Create scorekeeper object
     active_scorekeeper = create_scorekeeper()
 
+    active_gamekeeper = create_gamekeeper()
+
     print_info()
 
     print_board(**active_board)
 
-    while win_condition is False:
+    while active_gamekeeper['current_state'] is 'play':
 
         human_turn(active_board, example_board)
 
         update_scorekeeper(active_scorekeeper, active_board)
 
-        machine_turn(active_board)
+        update_gamekeeper(active_gamekeeper, active_scorekeeper)
+
+        machine_turn(active_board, active_scorekeeper)
 
         update_scorekeeper(active_scorekeeper, active_board)
+
+        update_gamekeeper(active_gamekeeper, active_scorekeeper)
+
+    print(active_gamekeeper)
 
 if __name__ == "__main__":
 
