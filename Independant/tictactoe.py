@@ -34,6 +34,65 @@ def print_board(**kwargs):
     print('\n{s1}\n{line}\n{s2}\n{line}\n{s3}\n'.format(s1=s1, s2=s2, s3=s3, line=line))
 
 
+def create_scorekeeper():
+    # Returns empty scorekeeper dictionary
+    # For each of the eight winning row/column/diagonals:
+    #     <count of X>, <count of O>, [<list of blank cells>]
+    scorekeeper = {}
+    for entry in ['a', 'b', 'c', '1', '2', '3', 'd1', 'd2']:
+        scorekeeper[entry] = [0, 0, []]
+    return scorekeeper
+
+
+def update_scorekeeper(scorekeeper, board):
+    # Add scores to scorekeeper dictionary
+
+    # Score rows
+    for letter in ['a', 'b', 'c']:
+        scorekeeper[letter] = [0, 0, []]
+        for number in [1, 2, 3]:
+            key = letter + str(number)
+            if board[key] == 'X':
+                scorekeeper[letter][0] += 1
+            elif board[key] == 'O':
+                scorekeeper[letter][1] += 1
+            else:
+                scorekeeper[letter][2].append(key)
+
+    # Score columns
+    for number in [1, 2, 3]:
+        scorekeeper[str(number)] = [0, 0, []]
+        for letter in ['a', 'b', 'c']:
+            key = letter + str(number)
+            if board[key] == 'X':
+                scorekeeper[str(number)][0] += 1
+            elif board[key] == 'O':
+                scorekeeper[str(number)][1] += 1
+            else:
+                scorekeeper[str(number)][2].append(key)
+
+    # Score first diagonal
+    for key in ['a1', 'b2', 'c3']:
+        scorekeeper['d1'] = [0, 0, []]
+        if board[key] == 'X':
+            scorekeeper['d1'][0] += 1
+        elif board[key] == 'O':
+            scorekeeper['d1'][1] += 1
+        else:
+            scorekeeper['d1'][2].append(key)
+
+    # Score second diagonal
+    for key in ['a3', 'b2', 'c1']:
+        scorekeeper['d2'] = [0, 0, []]
+        if board[key] == 'X':
+            scorekeeper['d2'][0] += 1
+        elif board[key] == 'O':
+            scorekeeper['d2'][1] += 1
+        else:
+            scorekeeper['d2'][2].append(key)
+    print(scorekeeper)
+
+
 def print_info():
     # Print instructions for humans
     print('''
@@ -78,7 +137,9 @@ def human_turn(active_board, example_board):
         else:
             print("try again")
 
+
 def machine_turn(active_board):
+
     best_move_list = ['b2', 'a1', 'a3', 'c1', 'c3', 'b1', 'b3', 'a2', 'c2']
 
     for entry in best_move_list:
@@ -107,7 +168,7 @@ def check_board(board, win_condition):
 
     if score_a[0] == 3:
         win_condition = True
-    elif score_a[0] == 2 and score_a[2][0]:
+    elif score_a[0] == 2 and score_a[1] == 0:
         threat_list.append(score_a[2][0])
 
     print([win_condition, threat_list])
@@ -127,20 +188,22 @@ def main():
     # Now, create the active board
     active_board = create_board()
 
+    # Create scorekeeper object
+    active_scorekeeper = create_scorekeeper()
+
     print_info()
 
     print_board(**active_board)
 
-    human_turn(active_board, example_board)
+    while win_condition is False:
 
-    machine_turn(active_board)
+        human_turn(active_board, example_board)
 
-    human_turn(active_board, example_board)
+        update_scorekeeper(active_scorekeeper, active_board)
 
-    machine_turn(active_board)
+        machine_turn(active_board)
 
-    check_board(active_board, win_condition)
-
+        update_scorekeeper(active_scorekeeper, active_board)
 
 if __name__ == "__main__":
 
