@@ -101,28 +101,33 @@ def create_gamekeeper():
     # Win/loss, Player, Draw
     # play, win, draw
 
-    gamekeeper = {'current_state': 'play', 'human_score': 0, 'machine_score': 0, 'available_moves': 0}
+    gamekeeper = {'current_state': 'play', 'human_score': 0, 'machine_score': 0}
     return gamekeeper
 
 
 def update_gamekeeper(active_gamekeeper, scorekeeper):
     # Updates current gamekeeper object with game state
 
-    active_gamekeeper['available_moves'] = 0
     active_gamekeeper['current_state'] = 'draw'
 
     for key in scorekeeper:
         if scorekeeper[key][0] == 3:
             active_gamekeeper['current_state'] = 'win'
             active_gamekeeper['human_score'] += 1
+            break
 
         if scorekeeper[key][1] == 3:
             active_gamekeeper['current_state'] = 'win'
             active_gamekeeper['machine_score'] += 1
+            break
 
         if len(scorekeeper[key][2]) > 0:
-            active_gamekeeper['available_moves'] += len(scorekeeper[key][2])
             active_gamekeeper['current_state'] = 'play'
+
+def print_gamekeeper(gamekeeper):
+    print('{}!'.format(gamekeeper['current_state']))
+    print('Human: {}'.format(gamekeeper['human_score']))
+    print('Machine: {}'.format(gamekeeper['machine_score']))
 
 
 def print_info():
@@ -135,7 +140,6 @@ You have the following commands at your disposal:
 \ta1 - c3: Mark that cell, if available
 \ti: Print these instructions
 \tp: Print labelled board
-\tx: Exit
 ''')
 
 
@@ -144,7 +148,7 @@ def human_turn(active_board, example_board):
 
         # print_info()
 
-        response = input('a1-c3, i, p or x: ').strip().lower()
+        response = input('a1-c3, i, p: ').strip().lower()
 
         print(response)
 
@@ -162,10 +166,6 @@ def human_turn(active_board, example_board):
         elif response == "p":
             print_board(**example_board)
 
-        elif response == "x":
-            print("Exiting program")
-            break
-
         else:
             print("try again")
 
@@ -174,10 +174,17 @@ def machine_turn(active_board, scorekeeper):
 
     move_list = []
 
+    # Attack
+    for key in scorekeeper:
+        if scorekeeper[key][1] == 2 and len(scorekeeper[key][2]) > 0:
+            move_list.append(scorekeeper[key][2][0])
+
+    # Defend
     for key in scorekeeper:
         if scorekeeper[key][0] == 2 and len(scorekeeper[key][2]) > 0:
             move_list.append(scorekeeper[key][2][0])
 
+    # Default moves
     best_move_list = ['b2', 'a1', 'a3', 'c1', 'c3', 'b1', 'b3', 'a2', 'c2']
 
     move_list += best_move_list
@@ -198,33 +205,32 @@ def main():
     label_board(example_board)
     print_board(**example_board)
 
-    # Now, create the active board
+    # Now, create the active objects
     active_board = create_board()
-
-    # Create scorekeeper object
     active_scorekeeper = create_scorekeeper()
-
     active_gamekeeper = create_gamekeeper()
 
+    # Print instructions for Human
     print_info()
 
+    # Print blank board
     print_board(**active_board)
 
+    # Initiate single game
     while active_gamekeeper['current_state'] is 'play':
 
+        # Human turn
         human_turn(active_board, example_board)
-
         update_scorekeeper(active_scorekeeper, active_board)
-
         update_gamekeeper(active_gamekeeper, active_scorekeeper)
 
+        # Machine turn
         machine_turn(active_board, active_scorekeeper)
-
         update_scorekeeper(active_scorekeeper, active_board)
-
         update_gamekeeper(active_gamekeeper, active_scorekeeper)
 
-    print(active_gamekeeper)
+    # Print final score
+    print_gamekeeper(active_gamekeeper)
 
 if __name__ == "__main__":
 
